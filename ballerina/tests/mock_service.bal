@@ -3,7 +3,7 @@
 
 import ballerina/http;
 import ballerina/log;
-import ballerina/io;
+
 
 listener http:Listener httpListener = new (9090);
 
