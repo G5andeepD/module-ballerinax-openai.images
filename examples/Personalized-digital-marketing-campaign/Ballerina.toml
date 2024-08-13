@@ -1,0 +1,8 @@
+[package]
+org = "sandeep2024"
+name = "Personalized_digital_marketing_campaign"
+version = "0.1.0"
+distribution = "2201.9.2"
+
+[build-options]
+observabilityIncluded = true
