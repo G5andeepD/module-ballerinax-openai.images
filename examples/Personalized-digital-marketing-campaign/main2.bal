@@ -13,14 +13,14 @@ final images:Client openaiClient = check new ({
 
 public function main() returns error? {
     // Step 1: Generate a base image using the `images/generation` API
-    string generationPrompt = "A futuristic smartphone with holographic display, sleek design, and glowing edges, displayed in a modern, high-tech environment.";
+    string generationPrompt = "a developer coding in vscode";
 
     images:CreateImageRequest generationRequest = {
         prompt: generationPrompt,
-        model: "dall-e-2",
+        model: "dall-e-3",
         n: 1,
         response_format: "b64_json",
-        size: "512x512"
+        size: "1024x1024"
     };
 
     images:ImagesResponse generationResponse = check openaiClient->/images/generations.post(generationRequest);
@@ -33,7 +33,7 @@ public function main() returns error? {
         string|byte[]|io:ReadableByteChannel|mime:DecodeError imageBytes = mime:base64Decode(base64Image.toBytes());
         if (imageBytes is byte[]) {
             // Save the base image to a file
-            error? saveBaseImageResult = io:fileWriteBytes("base_smartphone_image.png", imageBytes);
+            error? saveBaseImageResult = io:fileWriteBytes("coding_developer.png", imageBytes);
 
             if (saveBaseImageResult is error) {
                 io:println("Error writing the base image to a file: ", saveBaseImageResult);
@@ -42,21 +42,26 @@ public function main() returns error? {
             }
 
             // Read the saved image back to get its byte content
-            byte[] baseImageBytes = check io:fileReadBytes("base_smartphone_image.png");
+            byte[] baseImageBytes = check io:fileReadBytes("coding_developer_rgba.png");
+            byte[] mask = check io:fileReadBytes("mask2.png");
 
-            byte[] baseImageBytesRGBA = convertRGBtoRGBA(baseImageBytes, 512, 512);
+            // byte[] baseImageBytesRGBA = convertRGBtoRGBA(baseImageBytes, 512, 512);
 
-            io:print(baseImageBytesRGBA.length());
+            io:println(baseImageBytes.length());
 
             // Step 3: Edit the generated image using the `images/edit` API
             images:CreateImageEditRequest editRequest = {
                 image: {
-                    fileContent: baseImageBytesRGBA,
-                    fileName: "base_smartphone_image.png"
+                    fileContent: baseImageBytes,
+                    fileName: "city_skyline.png"
                 },
-                prompt: "Add the text 'Coming Soon' with a glowing effect at the bottom of the image.",
+                mask: {
+                    fileContent: mask,
+                    fileName: "mask.png"
+                },
+                prompt: "Remove the coffe mug and add a fanta drink bottle",
                 n: 1,
-                size: "512x512",
+                size: "1024x1024",
                 response_format: "b64_json"
             };
 
