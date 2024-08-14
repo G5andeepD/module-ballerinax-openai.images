@@ -37,9 +37,6 @@ version = "1.5.0"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"}
 ]
-modules = [
-	{org = "ballerina", packageName = "constraint", moduleName = "constraint"}
-]
 
 [[package]]
 org = "ballerina"
@@ -87,10 +84,6 @@ dependencies = [
 	{org = "ballerina", name = "observe"},
 	{org = "ballerina", name = "time"},
 	{org = "ballerina", name = "url"}
-]
-modules = [
-	{org = "ballerina", packageName = "http", moduleName = "http"},
-	{org = "ballerina", packageName = "http", moduleName = "http.httpscerr"}
 ]
 
 [[package]]
@@ -276,9 +269,6 @@ version = "2.4.0"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"}
 ]
-modules = [
-	{org = "ballerina", packageName = "url", moduleName = "url"}
-]
 
 [[package]]
 org = "ballerinai"
@@ -293,16 +283,31 @@ modules = [
 ]
 
 [[package]]
+org = "ballerinax"
+name = "openai.images"
+version = "1.0.5"
+dependencies = [
+	{org = "ballerina", name = "constraint"},
+	{org = "ballerina", name = "http"},
+	{org = "ballerina", name = "log"},
+	{org = "ballerina", name = "mime"},
+	{org = "ballerina", name = "os"},
+	{org = "ballerina", name = "url"},
+	{org = "ballerinai", name = "observe"}
+]
+modules = [
+	{org = "ballerinax", packageName = "openai.images", moduleName = "openai.images"}
+]
+
+[[package]]
 org = "sandeep2024"
 name = "Personalized_digital_marketing_campaign"
 version = "0.1.0"
 dependencies = [
-	{org = "ballerina", name = "constraint"},
-	{org = "ballerina", name = "http"},
 	{org = "ballerina", name = "io"},
 	{org = "ballerina", name = "mime"},
-	{org = "ballerina", name = "url"},
-	{org = "ballerinai", name = "observe"}
+	{org = "ballerinai", name = "observe"},
+	{org = "ballerinax", name = "openai.images"}
 ]
 modules = [
 	{org = "sandeep2024", packageName = "Personalized_digital_marketing_campaign", moduleName = "Personalized_digital_marketing_campaign"}
