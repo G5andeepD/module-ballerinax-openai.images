@@ -1,12 +1,11 @@
 import ballerina/io;
-
-
 import ballerina/mime;
+import ballerinax/openai.images;
 
 configurable string apiKey = ?;
 
 // Initialize the OpenAI Images client with your API key
-final Client openaiClient = check new ({
+final images:Client openaiClient = check new ({
     auth: {
         token: apiKey
     }
@@ -16,15 +15,15 @@ public function main() returns error? {
     // Step 1: Generate a base image using the `images/generation` API
     string generationPrompt = "A futuristic smartphone with holographic display, sleek design, and glowing edges, displayed in a modern, high-tech environment.";
 
-    CreateImageRequest generationRequest = {
+    images:CreateImageRequest generationRequest = {
         prompt: generationPrompt,
         model: "dall-e-2",
         n: 1,
         response_format: "b64_json",
-        size:"512x512"
+        size: "512x512"
     };
 
-    ImagesResponse generationResponse = check openaiClient->/images/generations.post(generationRequest);
+    images:ImagesResponse generationResponse = check openaiClient->/images/generations.post(generationRequest);
 
     // Save the generated image in base64 format
     string? base64Image = generationResponse.data[0].b64_json;
@@ -45,12 +44,12 @@ public function main() returns error? {
             // Read the saved image back to get its byte content
             byte[] baseImageBytes = check io:fileReadBytes("base_smartphone_image.png");
 
-            byte[] baseImageBytesRGBA = convertRGBtoRGBA(baseImageBytes,512,512);
+            byte[] baseImageBytesRGBA = convertRGBtoRGBA(baseImageBytes, 512, 512);
 
             io:print(baseImageBytesRGBA.length());
 
             // Step 3: Edit the generated image using the `images/edit` API
-            CreateImageEditRequest editRequest = {
+            images:CreateImageEditRequest editRequest = {
                 image: {
                     fileContent: baseImageBytesRGBA,
                     fileName: "base_smartphone_image.png"
@@ -61,7 +60,7 @@ public function main() returns error? {
                 response_format: "b64_json"
             };
 
-            ImagesResponse editResponse = check openaiClient->/images/edits.post(editRequest);
+            images:ImagesResponse editResponse = check openaiClient->/images/edits.post(editRequest);
 
             // Save the edited image in base64 format
             string? editedBase64Image = editResponse.data[0].b64_json;
@@ -99,7 +98,7 @@ function convertRGBtoRGBA(byte[] rgbImage, int width, int height) returns byte[]
     byte[] rgbaImage = [];
     int pixelCount = width * height;
 
-    foreach int i in 0..<pixelCount {
+    foreach int i in 0 ..< pixelCount {
         int index = i * 3;
         byte red = rgbImage[index];
         byte green = rgbImage[index + 1];
@@ -115,7 +114,7 @@ function convertRGBtoRGBA(byte[] rgbImage, int width, int height) returns byte[]
 
     //push the rest of the original array to new array
     //pixelCount to the end of the array
-    foreach int i in pixelCount..<rgbImage.length() {
+    foreach int i in pixelCount ..< rgbImage.length() {
         rgbaImage.push(rgbImage[i]);
     }
 
